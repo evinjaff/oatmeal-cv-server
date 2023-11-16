@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Oatmeal detection</title>
+    </head>
+
+    <body>
+        <h2>DETECTION RESULT</h2>
+        <p><b>Image name:</b> {{ image_name }}</p>
+        <p><b>Site Hits:</b> {{ site_counter }}</p>
+
+        <!-- display flask template oatmeal_image, which is a base64 string -->
+        <img src="{{ oatmeal_image }}" alt="oatmeal image" width="500" height="500">
+
+        <br>
+        
+        <h3>Debug Info:</h3>
+        <p><b>Date Image Last Uploaded:</b> {{ oatmeal_date }}</p>
+        <p><b>Detection accuracy:</b> {{ accuracy }}</p>
+        <p><b>Site Hits:</b> {{ site_counter }}</p>
+
+        <p><b>Base64 Image: </b> {{ oatmeal_image }} </p>
+    </body>
+</html>
