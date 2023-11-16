@@ -48,7 +48,7 @@ def process_image(image, type="base64"):
 
     for allPreds in predictionObject:
         for pred in allPreds:
-            if np.array(pred.boxes.conf)[0] >= 0.7:
+            if np.array(pred.boxes.conf)[0] >= 0.5:
                 
 
                 # get label

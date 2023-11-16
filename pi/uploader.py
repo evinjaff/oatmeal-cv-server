@@ -19,7 +19,7 @@ while True:
 	img_str = "data:image/jpeg;base64," + img_str
 
 	# Specify URL to send POST request to
-	url = "http://127.0.0.1/publish"
+	url = "https://flat-bags-grin.loca.lt/publish"
 
 	# Set headers and data for POST request
 	headers = {'Content-Type': 'application/json'}
@@ -31,6 +31,6 @@ while True:
 	# Print response status code
 	print(response.status_code)
 
-	time.sleep(1)
+	# time.sleep(1)
 
 	print("eep done")
