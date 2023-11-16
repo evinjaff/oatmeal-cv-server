@@ -2,28 +2,35 @@
 import requests
 import base64
 import cv2
+import time
 
 # Capture frame from webcam
 cap = cv2.VideoCapture(0)
 cap.set(cv2.CAP_PROP_EXPOSURE, 240) # set exposure to 40
-# try it again so the exposure is better
-ret, frame = cap.read()
 
-# Encode frame as base64 string
-_, buffer = cv2.imencode('.jpg', frame)
-img_str = base64.b64encode(buffer).decode('utf-8')
-# also include the prefix so that the base64 string can be decoded in html
-img_str = "data:image/jpeg;base64," + img_str
+while True:
+	# try it again so the exposure is better
+	ret, frame = cap.read()
 
-# Specify URL to send POST request to
-url = "http://127.0.0.1/publish"
+	# Encode frame as base64 string
+	_, buffer = cv2.imencode('.jpg', frame)
+	img_str = base64.b64encode(buffer).decode('utf-8')
+	# also include the prefix so that the base64 string can be decoded in html
+	img_str = "data:image/jpeg;base64," + img_str
 
-# Set headers and data for POST request
-headers = {'Content-Type': 'application/json'}
-data = {'image': img_str}
+	# Specify URL to send POST request to
+	url = "http://127.0.0.1/publish"
 
-# Send POST request
-response = requests.post(url, headers=headers, json=data)
+	# Set headers and data for POST request
+	headers = {'Content-Type': 'application/json'}
+	data = {'image': img_str}
 
-# Print response status code
-print(response.status_code)
+	# Send POST request
+	response = requests.post(url, headers=headers, json=data)
+
+	# Print response status code
+	print(response.status_code)
+
+	time.sleep(1)
+
+	print("eep done")

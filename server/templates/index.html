@@ -3,6 +3,7 @@
 <html>
     <head>
         <title>Oatmeal detection</title>
+        <meta http-equiv="refresh" content="1">
     </head>
 
     <body>
@@ -11,7 +12,9 @@
         <p><b>Site Hits:</b> {{ site_counter }}</p>
 
         <!-- display flask template oatmeal_image, which is a base64 string -->
-        <img src="{{ oatmeal_image }}" alt="oatmeal image" width="500" height="500">
+        <img src="{{ oatmeal_image }}" alt="oatmeal image" width="1080">
+
+        
 
         <br>
         
@@ -20,6 +23,10 @@
         <p><b>Detection accuracy:</b> {{ accuracy }}</p>
         <p><b>Site Hits:</b> {{ site_counter }}</p>
 
-        <p><b>Base64 Image: </b> {{ oatmeal_image }} </p>
+        <p><b>Processed Base64 Image: </b> {{ oatmeal_image }} </p>
+
+        <p><b>Unprocessed Base64 Image: </b> {{ oatmeal_image_unprocessed }} </p>
+
+        <img src="{{ oatmeal_image_unprocessed }}" alt="oatmeal image" width="500" height="500">
     </body>
 </html>
