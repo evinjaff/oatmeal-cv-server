@@ -18,6 +18,90 @@ latest_oatmeal_image = {
     'date': "2018-01-01 00:00:00"
 }
 
+######
+
+allItems = {
+    "salt": False,
+    "timer": False,
+    "hot_pad": False,
+    "oatmeal": False,
+    "big_spoon": False,
+    "measuring_spoons": False,
+    "measuring_cup_1/2": False,
+    "measuring_cup_coffee": False,
+    "measuring_cup_full": False,
+    "measuring_cup_1/3": False,
+    "measuring_cup_1/4": False,
+    "tongs": False,
+    "scissors": False,
+    "spatula": False,
+    "bowl": False,
+    "pan": False,
+    "pepper": False,
+    "measuring_cup_glass": False,
+    "small_spoon": False,
+    "measuring_cup_group": False,
+    "glass": False,
+}
+
+allRequired = {
+    "salt": False,
+    "timer": False,
+    "hot_pad": False,
+    "oatmeal": False,
+    "big_spoon": False,
+    "measuring_spoons": False,
+    "measuring_cup_1/2": False,
+    "bowl": False,
+    "pan": False,
+    "measuring_cup_glass": False,
+    "small_spoon": False,
+}
+
+allRequiredColors = {
+    "salt": tuple(np.random.random(size=3) * 256),
+    "timer": tuple(np.random.random(size=3) * 256),
+    "hot_pad": tuple(np.random.random(size=3) * 256),
+    "oatmeal": tuple(np.random.random(size=3) * 256),
+    "big_spoon": tuple(np.random.random(size=3) * 256),
+    "measuring_spoons": tuple(np.random.random(size=3) * 256),
+    "measuring_cup_1/2": tuple(np.random.random(size=3) * 256),
+    "bowl": tuple(np.random.random(size=3) * 256),
+    "pan": tuple(np.random.random(size=3) * 256),
+    "measuring_cup_glass": tuple(np.random.random(size=3) * 256),
+    "small_spoon": tuple(np.random.random(size=3) * 256),
+}
+
+allDistractors = {
+    "measuring_cup_coffee": False,
+    "measuring_cup_full": False,
+    "measuring_cup_1/3": False,
+    "measuring_cup_1/4": False,
+    "tongs": False,
+    "scissors": False,
+    "spatula": False,
+    "pepper": False,
+    "measuring_cup_group": False,
+    "glass": False,
+}
+
+allDistractorsColors = {
+    "measuring_cup_coffee": tuple(np.random.random(size=3) * 256),
+    "measuring_cup_full": tuple(np.random.random(size=3) * 256),
+    "measuring_cup_1/3": tuple(np.random.random(size=3) * 256),
+    "measuring_cup_1/4": tuple(np.random.random(size=3) * 256),
+    "tongs": tuple(np.random.random(size=3) * 256),
+    "scissors": tuple(np.random.random(size=3) * 256),
+    "spatula": tuple(np.random.random(size=3) * 256),
+    "pepper": tuple(np.random.random(size=3) * 256),
+    "measuring_cup_group": tuple(np.random.random(size=3) * 256),
+    "glass": tuple(np.random.random(size=3) * 256),
+}
+
+######
+
+
+
 def data_uri_to_cv2_img(uri):
     encoded_data = uri.split(',')[1]
     nparr = np.frombuffer(base64.b64decode(encoded_data), np.uint8)
@@ -47,48 +131,166 @@ def process_image(image, type="base64"):
     predictionObject = model(frame)
 
     for allPreds in predictionObject:
-        for pred in allPreds:
-            if np.array(pred.boxes.conf)[0] >= 0.5:
-                
+                for pred in allPreds:
+                    # get label
+                    labelNum = np.array(pred.boxes.cls)[0]
+                    labelName = allPreds.names[labelNum]
 
-                # get label
-                labelNum = np.array(pred.boxes.cls)[0]
-                labelName = allPreds.names[labelNum]
+                    # change item foundDictionaries to true
+                    if labelName in allRequired.keys():
+                        # reset timer if new item added
+                        if allRequired[labelName] == False:
+                            start_time = time.time()
 
-                # Draw bounding box for object
-                box = np.array(pred.boxes.xyxy).flatten().astype(int)
-                # randomColor = tuple(np.random.random(size=3) * 256)
-                randomColor = (0,255,0)
-                cv2.rectangle(
-                    finalImg,
-                    (box[0], box[1]),
-                    (box[2], box[3]),
-                    randomColor,
-                    4,
-                )
-                (label_width, label_height), baseline = cv2.getTextSize(
-                    f"{labelName}: {round(float(np.array(pred.boxes.conf)[0]), 2)}",
-                    cv2.FONT_HERSHEY_SIMPLEX,
-                    1,
-                    2,
-                )
-                cv2.rectangle(
-                    finalImg,
-                    (box[0], box[1]),
-                    (box[0] + label_width, box[1] - label_height),
-                    randomColor,
-                    -1,
-                )
+                        allRequired[labelName] = True
+                        randomColor = allRequiredColors[labelName]
+
+                    if labelName in allDistractors.keys():
+                        allDistractors[labelName] = True
+                        randomColor = allDistractorsColors[labelName]
+
+                    # Draw bounding box for object
+                    box = np.array(pred.boxes.xyxy).flatten().astype(int)
+
+                    cv2.rectangle(
+                        finalImg,
+                        (box[0], box[1]),
+                        (box[2], box[3]),
+                        randomColor,
+                        4,
+                    )
+                    (label_width, label_height), baseline = cv2.getTextSize(
+                        f"{labelName}: {round(float(np.array(pred.boxes.conf)[0]), 2)}",
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        2,
+                    )
+                    cv2.rectangle(
+                        finalImg,
+                        (box[0], box[1]),
+                        (box[0] + label_width, box[1] - label_height),
+                        randomColor,
+                        -1,
+                    )
+                    cv2.putText(
+                        finalImg,
+                        f"{labelName}: {round(float(np.array(pred.boxes.conf)[0]), 2)}",
+                        (box[0], box[1]),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        (0, 0, 0),
+                        2,
+                        cv2.LINE_AA,
+                    )
+
+                # ========= TEXT DISPLAY ========#
+                # Required Items
+                cv2.rectangle(finalImg, (0, 0), (540, h), (255, 255, 255), -1)
                 cv2.putText(
                     finalImg,
-                    f"{labelName}: {round(float(np.array(pred.boxes.conf)[0]), 2)}",
-                    (box[0], box[1]),
+                    "Required Items",
+                    (0, 50),
                     cv2.FONT_HERSHEY_SIMPLEX,
-                    1,
-                    (0, 0, 0),
                     2,
+                    (255, 0, 0),
+                    4,
                     cv2.LINE_AA,
                 )
+
+                iter = 0
+                for k, v in allRequired.items():
+                    cv2.putText(
+                        finalImg,
+                        f"{k}: ",
+                        (0, 50 + 40 + (30 * iter)),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        (0, 0, 0),
+                        2,
+                        cv2.LINE_AA,
+                    )
+
+                    (label_width, label_height), baseline = cv2.getTextSize(
+                        f"{k}: ", cv2.FONT_HERSHEY_SIMPLEX, 1, 2
+                    )
+
+                    if v == True:
+                        cv2.putText(
+                            finalImg,
+                            "PRESENT",
+                            (0 + label_width, 50 + 40 + (30 * iter)),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            1,
+                            (0, 180, 0),
+                            2,
+                            cv2.LINE_AA,
+                        )
+                    else:
+                        cv2.putText(
+                            finalImg,
+                            "ABSENT",
+                            (0 + label_width, 50 + 40 + (30 * iter)),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            1,
+                            (0, 0, 255),
+                            2,
+                            cv2.LINE_AA,
+                        )
+                    iter += 1
+
+                # Distractor Items
+                cv2.putText(
+                    finalImg,
+                    "Distractor Items",
+                    (0, h - h // 2),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    2,
+                    (255, 0, 0),
+                    4,
+                    cv2.LINE_AA,
+                )
+
+                iter = 0
+                for k, v in allDistractors.items():
+                    cv2.putText(
+                        finalImg,
+                        f"{k}: ",
+                        (0, h - h // 2 + 40 + (30 * iter)),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        1,
+                        (0, 0, 0),
+                        2,
+                        cv2.LINE_AA,
+                    )
+
+                    (label_width, label_height), baseline = cv2.getTextSize(
+                        f"{k}: ", cv2.FONT_HERSHEY_SIMPLEX, 1, 2
+                    )
+
+                    if v == True:
+                        cv2.putText(
+                            finalImg,
+                            "PRESENT",
+                            (0 + label_width, h - h // 2 + 40 + (30 * iter)),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            1,
+                            (0, 180, 0),
+                            2,
+                            cv2.LINE_AA,
+                        )
+                    else:
+                        cv2.putText(
+                            finalImg,
+                            "ABSENT",
+                            (0 + label_width, h - h // 2 + 40 + (30 * iter)),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            1,
+                            (0, 0, 255),
+                            2,
+                            cv2.LINE_AA,
+                        )
+                    iter += 1
+
 
     cv2.imwrite('image.png', finalImg)
 
