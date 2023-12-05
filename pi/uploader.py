@@ -19,7 +19,7 @@ while True:
 	img_str = "data:image/jpeg;base64," + img_str
 
 	# Specify URL to send POST request to
-	url = "https://flat-bags-grin.loca.lt/publish"
+	url = "http://evin-cvserver.eastus.cloudapp.azure.com/publish"
 
 	# Set headers and data for POST request
 	headers = {'Content-Type': 'application/json'}
