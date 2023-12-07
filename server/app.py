@@ -413,6 +413,29 @@ def query_item_status():
         "frame_hit_counter": frame_hit_counter
     }
 
+@app.route("/reset-detection", methods=['GET'])
+def reset_detection():
+    global allRequiredItems_state
+    global someDistractions_state
+    global frame_hit_counter
+
+    allRequiredItems_state = False
+    someDistractions_state = False
+    frame_hit_counter = 0
+
+    # also reset allItems, allRequired, allDistractors  to default
+    for k, v in allItems.items():
+        allItems[k] = False
+
+    for k, v in allRequired.items():
+        allRequired[k] = False
+
+    for k, v in allDistractors.items():
+        allDistractors[k] = False
+
+    return "success"
+
+
 
 # @app.route("/audio/allpresent.mp3")
 # def audio(filename):

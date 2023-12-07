@@ -21,6 +21,8 @@
 
         <input type="button" value="Refresh" onclick="fetchImage()">
 
+        <input type="button" value="Reset" onclick="resetDetection()">
+
 
         <p><b>Image name:</b> {{ image_name }}</p>
 
@@ -128,6 +130,19 @@
             }
 
 
+        }
+
+        async function resetDetection() {
+            var reset_ajaxSettings = {
+                type: 'GET',
+                url: "reset-detection",
+                async: true,
+                success: function (data) {
+                    console.log(data);
+                },
+            };
+
+            await $.ajax(reset_ajaxSettings);
         }
 
         function playHTMLAudio(audioDomElement) {
