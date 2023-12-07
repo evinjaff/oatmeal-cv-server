@@ -305,7 +305,7 @@ def process_image(image, type="base64"):
                     cv2.putText(
                         finalImg,
                         "All items present. Some distractors remain.",
-                        (0, 100),
+                        (0, h - 100),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         2,
                         (0, 255, 0),
@@ -316,7 +316,7 @@ def process_image(image, type="base64"):
                     cv2.putText(
                         finalImg,
                         "All items present.",
-                        (0, 100),
+                        (0, h - 100),
                         cv2.FONT_HERSHEY_SIMPLEX,
                         2,
                         (255, 0, 0),
