@@ -16,8 +16,8 @@ HEIGHT = HIGH_VALUE
 
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
 capture.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
-width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
-height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 print(width,height)
 
