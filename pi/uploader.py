@@ -6,6 +6,23 @@ import time
 
 # Capture frame from webcam
 cap = cv2.VideoCapture(0)
+
+
+
+# set resolution arbitrarily high to get max resoultion
+HIGH_VALUE = 10000
+WIDTH = HIGH_VALUE
+HEIGHT = HIGH_VALUE
+
+capture.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+capture.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+width = int(capture.get(cv2.CAP_PROP_FRAME_WIDTH))
+height = int(capture.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+print(width,height)
+
+print("width {}, height {}".format(width, height))
+
 cap.set(cv2.CAP_PROP_EXPOSURE, 240) # set exposure to 40
 
 while True:
@@ -19,7 +36,7 @@ while True:
 	img_str = "data:image/jpeg;base64," + img_str
 
 	# Specify URL to send POST request to
-	url = "http://evin-cvserver.eastus.cloudapp.azure.com/publish"
+	url = "https://brown-jeans-relax.loca.lt/publish"
 
 	# Set headers and data for POST request
 	headers = {'Content-Type': 'application/json'}
