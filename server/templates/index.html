@@ -25,7 +25,7 @@
         <p><b>Image name:</b> {{ image_name }}</p>
 
 
-        <p><b>Site Hits:</b> {{ site_counter }}</p>
+        <p><b>Frame Hits:</b> <i id="frame-counter"></i> </p>
 
 
         <div class="hidden-audio">
@@ -105,6 +105,8 @@
             var state = await $.ajax(state_ajaxSettings);
             console.log(state);
 
+            document.getElementById("frame-counter").innerHTML = state["frame_hit_counter"];
+
             all_items_present = state["allItemsPresent_state"];
             some_distractions = state["someDistractions_state"];
 
@@ -131,7 +133,7 @@
 
 
         // run an image fetch every 0.5 seconds
-        setInterval(fetchImage, 100);
+        // setInterval(fetchImage, 100);
         
 
 

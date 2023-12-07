@@ -10,7 +10,7 @@ from flask import send_file
 
 app = Flask(__name__, static_folder='static') # you might change this
 
-site_counter = 0
+frame_hit_counter = 0
 
 latest_oatmeal_image = {
     'image_name': "oatmeal.png",
@@ -345,12 +345,12 @@ def process_image(image, type="base64"):
 
 @app.route("/status")
 def hello():
-    global site_counter
-    site_counter += 1
+    global frame_hit_counter
+    frame_hit_counter += 1
     templateData = {
         'image_name': "oatmeal.png",
         'accuracy': 1.0,
-        'site_counter': site_counter,
+        'site_counter': frame_hit_counter,
         'oatmeal_date': latest_oatmeal_image['date'],
         'oatmeal_image': latest_oatmeal_image['base64'],
         'oatmeal_image_unprocessed': latest_oatmeal_image['base64_unprocessed']
@@ -364,6 +364,7 @@ def hello():
 @app.route("/publish", methods=['POST'])
 def publish():
     global latest_oatmeal_image
+    global frame_hit_counter
     
     # The request sends it in as a JSON object
     # so we have to parse it out, the base64 image is in the 'image' field
@@ -377,6 +378,8 @@ def publish():
 
     # print("Processed image")
     # print(cv_img)
+
+    frame_hit_counter += 1
     
     latest_oatmeal_image = {
         'image_name': "oatmeal.png",
@@ -401,11 +404,14 @@ def get_current_image():
 def query_item_status():
     global allRequiredItems_state
     global someDistractions_state
+    global frame_hit_counter
 
     return {
         "allRequiredItems_state": allRequiredItems_state,
-        "someDistractions_state": someDistractions_state
+        "someDistractions_state": someDistractions_state,
+        "frame_hit_counter": frame_hit_counter
     }
+
 
 # @app.route("/audio/allpresent.mp3")
 # def audio(filename):
