@@ -6,14 +6,16 @@ import numpy as np
 from ultralytics import YOLO
 import time
 import base64
+from flask import send_file
 
-app = Flask(__name__) # you might change this
+app = Flask(__name__, static_folder='static') # you might change this
 
 site_counter = 0
 
 latest_oatmeal_image = {
     'image_name': "oatmeal.png",
-    'base64': "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9h",
+    # 'base64': "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9h",
+    'base64': 'not an image',
     'base64_unprocessed': "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9h",
     'date': "2018-01-01 00:00:00"
 }
@@ -98,6 +100,11 @@ allDistractorsColors = {
     "glass": tuple(np.random.random(size=3) * 256),
 }
 
+allRequiredItems_state = False
+someDistractions_state = False
+
+current_image_in_mem = ""
+
 ######
 
 
@@ -112,6 +119,8 @@ def data_uri_to_cv2_img(uri):
     return img
 
 def process_image(image, type="base64"):
+    global allRequiredItems_state
+    global someDistractions_state
     # frame = cv2.imread("/Users/evinjaff/github/oatmeal-cv-server/server/add_005.jpg")
     # if image is base64, also wrap in a decode
     # frame = base64.b64decode(image)
@@ -290,9 +299,42 @@ def process_image(image, type="base64"):
                             cv2.LINE_AA,
                         )
                     iter += 1
+                
+                if(allRequiredItems_state and someDistractions_state):
+                    cv2.putText(
+                        finalImg,
+                        "All items present. Some distractors remain.",
+                        (0, h - h // 2 - 100),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        2,
+                        (0, 255, 0),
+                        4,
+                        cv2.LINE_AA,
+                    )
+                elif (allRequiredItems_state and not someDistractions_state):
+                    cv2.putText(
+                        finalImg,
+                        "All items present.",
+                        (0, h - h // 2 - 100),
+                        cv2.FONT_HERSHEY_SIMPLEX,
+                        2,
+                        (255, 0, 0),
+                        4,
+                        cv2.LINE_AA,
+                    )
 
 
     cv2.imwrite('image.png', finalImg)
+
+    if all(allRequired.values()):
+        allRequiredItems_state = True
+
+    if any(allDistractors.values()):
+        someDistractions_state = True
+
+    # if no distractors flip state back to false
+    if not any(allDistractors.values()):
+        someDistractions_state = False
 
 
     # return finalImg as base64
@@ -314,7 +356,10 @@ def hello():
         'oatmeal_image_unprocessed': latest_oatmeal_image['base64_unprocessed']
 
     } # to be changed
-    return render_template('index.html', **templateData)
+
+    audio_files = ["allpresent.mp3", "allpresentsomedistractors.mp3"]
+
+    return render_template('index.html', **templateData, audio_files=audio_files)
 
 @app.route("/publish", methods=['POST'])
 def publish():
@@ -346,6 +391,27 @@ def publish():
 def bad_publish():
     # Return a bad method http code
     return "bad method - use POST"
+
+@app.route("/current_image", methods=['GET'])
+def get_current_image():
+    global latest_oatmeal_image
+    return latest_oatmeal_image["base64"]
+
+@app.route("/query-item-status", methods=['GET'])
+def query_item_status():
+    global allRequiredItems_state
+    global someDistractions_state
+
+    return {
+        "allRequiredItems_state": allRequiredItems_state,
+        "someDistractions_state": someDistractions_state
+    }
+
+# @app.route("/audio/allpresent.mp3")
+# def audio(filename):
+#   return send_file(filename, as_attachment=True)
+
+
     
 
 if __name__ == '__main__':

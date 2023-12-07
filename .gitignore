@@ -1,2 +1,6 @@
 
 *.pt
+
+server/.DS_Store
+
+server/static/.DS_Store

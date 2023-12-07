@@ -3,22 +3,54 @@
 <html>
     <head>
         <title>Oatmeal detection</title>
-        <meta http-equiv="refresh" content="1">
+        <!-- <meta http-equiv="refresh" content="1"> -->
+        <script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+  crossorigin="anonymous"></script>
     </head>
+
+    <style>
+        .hidden-audio {
+            display: none;
+        }
+    </style>
 
     <body>
         <h2>DETECTION RESULT</h2>
+
+        <input type="button" value="Refresh" onclick="fetchImage()">
+
+
         <p><b>Image name:</b> {{ image_name }}</p>
+
+
         <p><b>Site Hits:</b> {{ site_counter }}</p>
 
+
+        <div class="hidden-audio">
+
+       
+
+        {% for file in audio_files %}
+        <audio controls id={{ url_for('static', filename=file) }}>
+        <source src={{ url_for('static', filename=file) }} type="audio/mpeg">
+        </audio>
+        {% endfor %}
+
+        </div>
+
         <!-- display flask template oatmeal_image, which is a base64 string -->
-        <img src="{{ oatmeal_image }}" alt="oatmeal image" width="1080">
+        <!-- <img src="{{ oatmeal_image }}" alt="oatmeal image" width="1080"> -->
+        <div id="image-holder">
+        </div>
+
+
 
         
-
         <br>
         
-        <h3>Debug Info:</h3>
+        <!-- <h3>Debug Info:</h3>
         <p><b>Date Image Last Uploaded:</b> {{ oatmeal_date }}</p>
         <p><b>Detection accuracy:</b> {{ accuracy }}</p>
         <p><b>Site Hits:</b> {{ site_counter }}</p>
@@ -27,6 +59,83 @@
 
         <p><b>Unprocessed Base64 Image: </b> {{ oatmeal_image_unprocessed }} </p>
 
-        <img src="{{ oatmeal_image_unprocessed }}" alt="oatmeal image" width="500" height="500">
+        <img src="{{ oatmeal_image_unprocessed }}" alt="oatmeal image" width="500" height="500"> -->
+
+        <script>
+
+        let image_ajaxSettings = {
+            type: 'GET',
+            url: "current_image",
+            async: true,
+            success: function (data) {
+                console.log(data);
+            },
+        };
+
+        let state_ajaxSettings = {
+            type: 'GET',
+            url: "query-item-status",
+            async: true,
+            success: function (data) {
+                console.log(data);
+            },
+        };
+        
+        async function fetchImage() {
+            var image = new Image();
+            image.src = await $.ajax(image_ajaxSettings);
+            image.alt = "idk";
+            image.width = 1080;
+
+            //if image starts with "data:image/png;base64," then it is a base64 string
+            //if image starts with "static/" then it is a path to a file
+            if (!image.src.startsWith("data:image/png;base64,")) {
+                image.src = "static/images/placeholder.gif";
+            } 
+
+            image_holder = document.getElementById("image-holder");
+            image_holder.innerHTML = "";
+            image_holder.appendChild(image);
+
+            await fetchStateAndPlayAudioIfNeeded();
+
+        }
+
+        async function fetchStateAndPlayAudioIfNeeded() {
+            var state = await $.ajax(state_ajaxSettings);
+            console.log(state);
+
+            all_items_present = state["allItemsPresent_state"];
+            some_distractions = state["someDistractions_state"];
+
+            if (all_items_present && !some_distractions) {
+                console.log("all required items are present");
+                playHTMLAudio( document.getElementById("/static/allpresent.mp3") );
+            }
+
+            if (all_items_present && some_distractions) {
+                console.log("all required items are present some distractors");
+                playHTMLAudio( document.getElementById("/static/allpresentsomedistractors.mp3") );
+            }
+
+
+        }
+
+        function playHTMLAudio(audioDomElement) {
+            audioDomElement.play();
+        }
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            fetchImage();
+        });
+
+
+        // run an image fetch every 0.5 seconds
+        setInterval(fetchImage, 100);
+        
+
+
+        </script>
+
     </body>
 </html>

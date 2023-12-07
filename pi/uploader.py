@@ -14,8 +14,8 @@ HIGH_VALUE = 10000
 WIDTH = HIGH_VALUE
 HEIGHT = HIGH_VALUE
 
-capture.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
-capture.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
@@ -36,7 +36,7 @@ while True:
 	img_str = "data:image/jpeg;base64," + img_str
 
 	# Specify URL to send POST request to
-	url = "https://brown-jeans-relax.loca.lt/publish"
+	url = "http://evin-cvserver.eastus.cloudapp.azure.com/publish"
 
 	# Set headers and data for POST request
 	headers = {'Content-Type': 'application/json'}
