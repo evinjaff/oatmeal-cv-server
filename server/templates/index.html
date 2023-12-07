@@ -8,26 +8,50 @@
   src="https://code.jquery.com/jquery-3.7.1.min.js"
   integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
   crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
     </head>
 
     <style>
         .hidden-audio {
             display: none;
         }
+
+        body {
+            background-color: #FFFDD0;
+        }
+
     </style>
 
     <body>
-        <h2>DETECTION RESULT</h2>
+        
 
-        <input type="button" value="Refresh" onclick="fetchImage()">
+        <div class="container">
+            <div class="row">
+              <div class="col-sm justify-content-center">
+                <h2 class="text-center">Oatmeal Detection Server</h2>
+              </div>
+            </div>
+          </div>
 
-        <input type="button" value="Reset" onclick="resetDetection()">
+        <div class="container">
+            <div class="row">
+                <input type="button" value="Refresh" onclick="fetchImage()">
+                <input type="button" value="Reset" onclick="resetDetection()">
+            </div>
+            <br>
+            <br>
+            <div class="row justify-content-center">
+              <div class="col-sm">
+                <div id="image-holder" class="justify-content-center">
+                </div>
+            </div>
+          </div>
+        </div>
 
 
-        <p><b>Image name:</b> {{ image_name }}</p>
-
-
-        <p><b>Frame Hits:</b> <i id="frame-counter"></i> </p>
+        <p><b>Frames:</b> <i id="frame-counter"></i> </p>
 
 
         <div class="hidden-audio">
@@ -44,11 +68,6 @@
 
         <!-- display flask template oatmeal_image, which is a base64 string -->
         <!-- <img src="{{ oatmeal_image }}" alt="oatmeal image" width="1080"> -->
-        <div id="image-holder">
-        </div>
-
-
-
         
         <br>
         
@@ -88,6 +107,7 @@
             image.src = await $.ajax(image_ajaxSettings);
             image.alt = "idk";
             image.width = 1080;
+            image.style = "display: block; margin-left: auto; margin-right: auto; width: 80%;";
 
             //if image starts with "data:image/png;base64," then it is a base64 string
             //if image starts with "static/" then it is a path to a file

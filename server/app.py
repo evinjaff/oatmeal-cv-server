@@ -347,7 +347,7 @@ def process_image(image, type="base64"):
 @app.route("/status")
 def hello():
     global frame_hit_counter
-    frame_hit_counter += 1
+    # frame_hit_counter += 1
     templateData = {
         'image_name': "oatmeal.png",
         'accuracy': 1.0,
