@@ -8,6 +8,7 @@ import time
 import base64
 from flask import send_file
 
+
 app = Flask(__name__, static_folder='static') # you might change this
 
 frame_hit_counter = 0

@@ -68,7 +68,7 @@
             url: "current_image",
             async: true,
             success: function (data) {
-                console.log(data);
+                // console.log(data);
             },
         };
 
@@ -107,8 +107,15 @@
 
             document.getElementById("frame-counter").innerHTML = state["frame_hit_counter"];
 
-            all_items_present = state["allItemsPresent_state"];
-            some_distractions = state["someDistractions_state"];
+            // all_items_present = state.allRequiredItems_state;
+            // some_distractions = state.someDistractions_state;
+
+            all_items_present = true
+            some_distractions = false
+
+
+            console.log("all_items_present: " + all_items_present);
+            console.log("some_distractions: " + some_distractions);
 
             if (all_items_present && !some_distractions) {
                 console.log("all required items are present");

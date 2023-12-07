@@ -42,12 +42,12 @@ while True:
 	headers = {'Content-Type': 'application/json'}
 	data = {'image': img_str}
 
+	print("sending")
 	# Send POST request
 	response = requests.post(url, headers=headers, json=data)
 
 	# Print response status code
 	print(response.status_code)
 
-	# time.sleep(1)
 
 	print("eep done")
