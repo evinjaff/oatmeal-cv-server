@@ -15,6 +15,10 @@ It is recommended to create a virtual environment server. In case one already ex
 
 We need a few additional packages to get things up and running. Run `pip install numpy opencv-python ultralytics flask` and then you should be ready for a script.
 
+### Import pretrained weights
+
+The server expects a `best.pt` file to live in the base `server` folder. We do not include one, because it violates GitHub's large file size rule. Either train you own weights using the training notebook under the training repo or get some pretrained weights elsewhere to do this.
+
 ### Deployment/Running as a service
 
 While Flask can be run as a service, I would recommend actually using [tmux](https://tmuxcheatsheet.com/) or [GNU screen](https://www.gnu.org/software/screen/) to keep the full output available and be able to debug/interact with the server if needed. I personally used a persistent tmux session to keep track of things
