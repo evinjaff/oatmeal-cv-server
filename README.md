@@ -3,7 +3,6 @@
 
 This contains the code for Group 7's Oatmeal CV server. The repo is divided into two folders `pi` and `server` that respectively contain client and server code.
 
-
 ## Server (server)
 
 The server folder holds all the code needed to run the Flask server that displays the status and processes data sent from the client.
@@ -12,13 +11,13 @@ The server folder holds all the code needed to run the Flask server that display
 
 ### Required packages/Virtual Environment
 
-It is reccomended to create a virtual environment server. In case one already exists type `sudo rm -rf venv/` inside the `server` folder and then run `python3 -m venv venv` to create a virtual environemnt. Activate this environment by typing `source venv/bin/activate`
+It is recommended to create a virtual environment server. In case one already exists type `sudo rm -rf venv/` inside the `server` folder and then run `python3 -m venv venv` to create a virtual environemnt. Activate this environment by typing `source venv/bin/activate`
 
 We need a few additional packages to get things up and running. Run `pip install numpy opencv-python ultralytics flask` and then you should be ready for a script.
 
 ### Deployment/Running as a service
 
-While Flask can be run as a service, I would reccomend actually using [tmux](https://tmuxcheatsheet.com/) or [GNU screen](https://www.gnu.org/software/screen/) to keep the full output available and be able to debug/interact with the server if needed. I personally used a persistent tmux session to keep track of things
+While Flask can be run as a service, I would recommend actually using [tmux](https://tmuxcheatsheet.com/) or [GNU screen](https://www.gnu.org/software/screen/) to keep the full output available and be able to debug/interact with the server if needed. I personally used a persistent tmux session to keep track of things
 
 ## Client (pi)
 
@@ -26,7 +25,7 @@ The client code uploads the a photo from a USB-attached webcam to a service. If 
 
 ### Required packages/Virtual Environment
 
-It is reccomended to create a virtual environment for the Pi (and required if you want to run it as a service). In case one already exists type `sudo rm -rf venv/` inside the `pi` folder and then run `python3 -m venv venv` to create a virtual environment. Activate this environment by typing `source venv/bin/activate`
+It is recommended to create a virtual environment for the Pi (and required if you want to run it as a service). In case one already exists type `sudo rm -rf venv/` inside the `pi` folder and then run `python3 -m venv venv` to create a virtual environment. Activate this environment by typing `source venv/bin/activate`
 
 In order to function on the client side, all that the Pi needs is the [requests for humans](https://requests.readthedocs.io/) and [opencv](https://pypi.org/project/opencv-python/) packages. Running `pip install requests opencv-python` should handle this dependency.
 
@@ -36,7 +35,7 @@ Due to the class project nature, we haven't included command-line arguments to a
 
 ### Run it as a systemd service
 
-It is highly reccomended you run this script as a service, so that it will run whenever you turn the Pi on. Here is an example of what it should look like. You can create this file under `/etc/systemd/system/` and name it something like `oatmealcam.service`. You will need to point systemd to the python file inside your virtual environment like so:
+It is highly recommended you run this script as a service, so that it will run whenever you turn the Pi on. Here is an example of what it should look like. You can create this file under `/etc/systemd/system/` and name it something like `oatmealcam.service`. You will need to point systemd to the python file inside your virtual environment like so:
 
 ```
 [Unit]
